@@ -10,7 +10,7 @@ This project is licensed under the GPLv2. See the `LICENSE` file, or the [GNU we
 
 1. Compile the script into an actual executable, see the [AutoIt documentation](https://www.autoitscript.com/autoit3/docs/intro/compiler.htm) for details
 2. Copy `teamviewer-o-matic.conf.sample`, rename the copy to `teamviewer-o-matic.conf` and fill it with your details
-3. Run `teamviewer-o-matic.exe <Full|Host> <languageToUse>`, a tray tip telling you it's waiting for setup will appear.  
+3. Run `teamviewer-o-matic.exe <Full|Host> <languageToUse>`, a tray tip telling you it's waiting for setup will appear. Note that right now "german" is the only supported language.  
 (And yes, `Full` or `Host` MUST be given in this casing - with first letter uppercase and rest lowercase)
 4. Run the choosen TeamViewer installer and watch the magic.
 
@@ -27,7 +27,7 @@ If you intend to do so, I would highly appreciate if you fork this repository an
 To add a new language:
 
 1. Copy `teamviewer-o-matic.strings.german.conf`, rename the copy to `teamviewer-o-matic.strings.myFancyLanguage.conf`. `myFancyLanguage` is what you will later use when running `teamviewer-o-matic.exe`
-2. Replace the texts in the categories `Full_WindowTitles`, `Full_WindowTexts`, `Host_WindowTitles`, `Host_WindowTexts` with their aquivalents from the TeamViewer installers you want to use. They are in order of appearance in setup flow, so it should be easy to get them even if you don't understand german. Else there is still Google Translate ;)
+2. Replace the texts in the categories `Full_WindowTitles`, `Full_WindowTexts`, `Host_WindowTitles`, `Host_WindowTexts` with their equivalents from the TeamViewer installers you want to use. They are in order of appearance in setup flow, so it should be easy to get them even if you don't understand german. Else there is still Google Translate ;)
 3. Replace the texts in `Full_TrayTips` and `Host_TrayTips` to also localize teamviewer-o-matic's traytips (optional)
 
 ##### Where to find binaries / already compiled releases? #####
