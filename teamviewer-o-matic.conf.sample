@@ -1,0 +1,8 @@
+[Setup]
+AccountUsername=
+AccountPassword=
+ConnectPassword=
+
+[Advanced]
+SleepDelay=750
+SendKeyDelay=250
