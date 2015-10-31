@@ -30,4 +30,6 @@ To add a new language:
 2. Replace the texts in the categories `Full_WindowTitles`, `Full_WindowTexts`, `Host_WindowTitles`, `Host_WindowTexts` with their aquivalents from the TeamViewer installers you want to use. They are in order of appearance in setup flow, so it should be easy to get them even if you don't understand german. Else there is still Google Translate ;)
 3. Replace the texts in `Full_TrayTips` and `Host_TrayTips` to also localize teamviewer-o-matic's traytips (optional)
 
+##### Where to find binaries / already compiled releases? #####
 
+See [my Blog](https://blog.mcdope.org/tags/teamviewer/) for occasional binary drops.
