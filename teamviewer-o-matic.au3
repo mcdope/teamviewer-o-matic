@@ -4,12 +4,15 @@
 #AutoIt3Wrapper_Compression=4
 #AutoIt3Wrapper_Res_Comment=TeamViewer unattented installscript
 #AutoIt3Wrapper_Res_Description=This script automates the TeamViewer setup
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.0
+#AutoIt3Wrapper_Res_Fileversion=2.0.0.1
 #AutoIt3Wrapper_Res_LegalCopyright=© 2015 <https://blog.mcdope.org/>
 #AutoIt3Wrapper_Res_Language=1031
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Res_Field=License|GPLv2 (https://www.gnu.org/licenses/gpl-2.0.txt)
+#AutoIt3Wrapper_Res_Field=Sourcecode|https://github.com/mcdope/teamviewer-o-matic
+#AutoIt3Wrapper_Res_Field=Homepage|https://blog.mcdope.org/tags/teamviewer/
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
+#include <MsgBoxConstants.au3>
 
 Global $wTitle = "", $wTitle2 = "", $wTitle3 = "", $wTitle4 = "", $wTitleInitial = ""
 Global $wInstallStartText = "", $wAdvancedOptionsText = "", $wUnattendedStartText = "", $wUnattendedStep1Text = "", $wUnattendedStep2Text = "", $wUnattendedFinishText = "", $wInitialLaunchText = ""
@@ -18,55 +21,65 @@ Global $wTitleInfo = "", $wInfoText = "", $wTextAreaOfUsage = "", $wTextLicense 
 Global $strUser = "", $strPass = "", $strPassword = "", $iDelay  = 250
 
 Global $sType, $sLanguageToUse
-$sType = $CmdLine[1]
-$sLanguageToUse = $CmdLine[2]
-
-__readLanguageStrings($sLanguageToUse, $sType)
-__readConfigFile()
-If $sType = "Host" Then
-	__hostInstallerAutomation()
+If $CmdLine[0] < 2 Then
+	MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "Incorrect parameter count, be sure to give variant and language!");
+	Exit 1
 Else
-	__fullInstallerAutomation()
-EndIf
+	$sType = $CmdLine[1]
+	$sLanguageToUse = $CmdLine[2]
 
+	__readLanguageStrings($sLanguageToUse, $sType)
+	__readConfigFile()
+	If $sType == "Host" Then
+		__hostInstallerAutomation()
+	Else
+		__fullInstallerAutomation()
+	EndIf
+	Exit 0
+EndIf
 
 
 
 Func __readLanguageStrings($sLanguageToUse, $sVariant)
 	Local $sLangFile = @ScriptDir & "\teamviewer-o-matic.strings." & $sLanguageToUse & ".conf"
 
-	$wTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "MainTitle", "")
-	$wTitle2 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedMainTitle", "")
-	$wTitle3 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep1Title", "")
-	$wTitle4 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep2Title", "")
-	$wTitleInitial = IniRead($sLangFile, $sVariant & "_WindowTitles", "InitialLaunchTitle", "")
-	If $sVariant = "Host" Then
-		$wTitleInfo = IniRead($sLangFile, $sVariant & "_WindowTitles", "InfoTitle", "")
-	EndIf
+	Local $iFileExists = FileExists($sLangFile)
+	If $iFileExists Then
+		$wTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "MainTitle", "")
+		$wTitle2 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedMainTitle", "")
+		$wTitle3 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep1Title", "")
+		$wTitle4 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep2Title", "")
+		$wTitleInitial = IniRead($sLangFile, $sVariant & "_WindowTitles", "InitialLaunchTitle", "")
+		If $sVariant == "Host" Then
+			$wTitleInfo = IniRead($sLangFile, $sVariant & "_WindowTitles", "InfoTitle", "")
+		EndIf
 
-	$wUnattendedStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStartText", "")
-	$wUnattendedStep1Text = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStep1Text", "")
-	$wUnattendedStep2Text = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStep2Text", "")
-	$wUnattendedFinishText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedFinishText", "")
-	$wInitialLaunchText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InitialLaunchText", "")
-	If $sVariant = "Host" Then
-		$wTextAreaOfUsage = IniRead($sLangFile, $sVariant & "_WindowTexts", "AreaOfUsage", "")
-		$wTextLicense = IniRead($sLangFile, $sVariant & "_WindowTexts", "License", "")
-		$wTextComponents = IniRead($sLangFile, $sVariant & "_WindowTexts", "Components", "")
-		$wTextTargetDir = IniRead($sLangFile, $sVariant & "_WindowTexts", "TargetDir", "")
-		$wInfoText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InfoText", "")
+		$wUnattendedStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStartText", "")
+		$wUnattendedStep1Text = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStep1Text", "")
+		$wUnattendedStep2Text = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStep2Text", "")
+		$wUnattendedFinishText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedFinishText", "")
+		$wInitialLaunchText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InitialLaunchText", "")
+		If $sVariant == "Host" Then
+			$wTextAreaOfUsage = IniRead($sLangFile, $sVariant & "_WindowTexts", "AreaOfUsage", "")
+			$wTextLicense = IniRead($sLangFile, $sVariant & "_WindowTexts", "License", "")
+			$wTextComponents = IniRead($sLangFile, $sVariant & "_WindowTexts", "Components", "")
+			$wTextTargetDir = IniRead($sLangFile, $sVariant & "_WindowTexts", "TargetDir", "")
+			$wInfoText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InfoText", "")
+		Else
+			$wInstallStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InstallStartText", "")
+			$wAdvancedOptionsText = IniRead($sLangFile, $sVariant & "_WindowTexts", "AdvancedOptionsText", "")
+		EndIf
+
+		$sTrayTitle = IniRead($sLangFile, $sVariant & "_TrayTips", "TrayTitle", "")
+		$sInstallStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "InstallStartTip", "")
+		$sConfigStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ConfigStartTip", "")
+		$sUnattendedStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedStartTip", "")
+		$sImportRegTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ImportRegTip", "")
+		$sFinishedTip = IniRead($sLangFile, $sVariant & "_TrayTips", "FinishedTip", "")
 	Else
-		$wInstallStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InstallStartText", "")
-		MsgBox(0, "Debug", $wInstallStartText)
-		$wAdvancedOptionsText = IniRead($sLangFile, $sVariant & "_WindowTexts", "AdvancedOptionsText", "")
+		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The given language '" & $sLanguageToUse & "' couldn't be found!");
+		Exit 2
 	EndIf
-
-	$sTrayTitle = IniRead($sLangFile, $sVariant & "_TrayTips", "TrayTitle", "")
-	$sInstallStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "InstallStartTip", "")
-	$sConfigStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ConfigStartTip", "")
-	$sUnattendedStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedStartTip", "")
-	$sImportRegTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ImportRegTip", "")
-	$sFinishedTip = IniRead($sLangFile, $sVariant & "_TrayTips", "FinishedTip", "")
 EndFunc
 
 Func __readConfigFile()
@@ -78,19 +91,19 @@ Func __readConfigFile()
 
 	$iErr = 0;
 	If $strUser == "" Then
-		MsgBox(0, "Error!", "The Teamviewer-Account ('AccountUsername') couldn't be found in 'teamviewer-o-matic.conf'!");
+		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account ('AccountUsername') couldn't be found in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
 	If $strPass == "" Then
-		MsgBox(0, "Error!", "The Teamviewer-Account password ('AccountPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
+		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account password ('AccountPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
 	If $strPassword == "" Then
-		MsgBox(0, "Error!", "The connection password ('ConnectPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
+		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The connection password ('ConnectPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
 	If $iErr == 1 Then
-		Exit
+		Exit 3
 	EndIf
 EndFunc
 
@@ -176,6 +189,13 @@ Func __hostInstallerAutomation()
 		RunWait(@ComSpec & " /c net stop TeamViewer", @ScriptDir)
 		RunWait(@ComSpec & " /c ""regedit.exe /s tv_host.reg""", @ScriptDir)
 		RunWait(@ComSpec & " /c net start TeamViewer", @ScriptDir)
+
+		; Close info dialog which occurs after restarting the TeamViewer service
+		WinWait($wTitleInfo, $wInfoText)
+		WinActivate($wTitleInfo, $wInfoText)
+		Sleep($iDelay)
+		WinWaitActive($wTitleInfo)
+		ControlClick($wTitleInfo, "", "[CLASS:Button; INSTANCE:1]") ; OK
 	EndIf
 
 	TrayTip($sTrayTitle, $sFinishedTip, 15, 1)
