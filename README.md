@@ -16,7 +16,10 @@ This project is licensed under the GPLv2. See the `LICENSE` file, or the [GNU we
 
 It is also possible to have teamviewer-o-matic import a settings export from TeamViewer. To do so simply export the settings from a manually configured client. You will get a `.reg` file then, put this file as `tv_full.reg` or `tv_host.reg` - depending on source / target - in the teamviewer-o-matic directory. It will get detected and imported then after the TeamViewer Setup is done. 
 
-Note: I've never tested importing host settings on full, or the other way around. But I wouldn't recommend it, so don't mix them up.
+##### Important infos about the settings import #####
+I've never tested importing host settings on full, or the other way around. But I wouldn't recommend it, so don't mix them up.
+
+Also keep in mind that, according to user reports, TeamViewer exports the settings incorrectly if running on x64. It creates entries like `HKEY_LOCAL_MACHINE\SOFTWARE\TeamViewer` while it should be `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\TeamViewer`. You need to manually edit those (open the .reg file in Notepad or another editor), else the file will get imported - but will have no effect. This is because without editing the entries land in the registry section for x64 executables, but TeamViewer runs on the Wow6432 subsystem since it's a 32bit executable and its RegRead api calls get redirected. (Correct me if I'm wrong, but that's how I understood Windows and it's APIs)
 
 ##### Available languages & adding new languages ######
 
