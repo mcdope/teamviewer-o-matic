@@ -2,9 +2,10 @@
 #AutoIt3Wrapper_Icon=update.ico
 #AutoIt3Wrapper_Outfile=teamviewer-o-matic.exe
 #AutoIt3Wrapper_Compression=4
+#AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Comment=TeamViewer unattented installscript
 #AutoIt3Wrapper_Res_Description=This script automates the TeamViewer setup
-#AutoIt3Wrapper_Res_Fileversion=2.0.0.1
+#AutoIt3Wrapper_Res_Fileversion=2.0.11.0
 #AutoIt3Wrapper_Res_LegalCopyright=© 2015 <https://blog.mcdope.org/>
 #AutoIt3Wrapper_Res_Language=1031
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
@@ -140,6 +141,13 @@ Func __fullInstallerAutomation()
 		RunWait(@ComSpec & " /c net stop TeamViewer", @ScriptDir)
 		RunWait(@ComSpec & " /c ""regedit.exe /s tv_full.reg""", @ScriptDir)
 		RunWait(@ComSpec & " /c net start TeamViewer", @ScriptDir)
+
+		; Close info dialog which occurs after restarting the TeamViewer service
+		WinWait($wTitleInfo, $wInfoText)
+		WinActivate($wTitleInfo, $wInfoText)
+		Sleep($iDelay)
+		WinWaitActive($wTitleInfo)
+		WinClose($wTitleInfo, $wInfoText)
 	EndIf
 
 	TrayTip($sTrayTitle, $sFinishedTip, 15, 1)
