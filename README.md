@@ -29,6 +29,7 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
 
  -  German - Use with "german" as param, translation by Tobias Bäumer
  -  Italian - Use with "italian" as param, translation by Simone Naldi
+ -  English - Use with "english" as param, translation by Tobias Bäumer
 
 ---
 
