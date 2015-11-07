@@ -60,8 +60,6 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
 
 It is also possible to have teamviewer-o-matic import a settings export from TeamViewer. To do so simply export the settings from a manually configured client. You will get a `.reg` file then, put this file as `tv_full.reg` or `tv_host.reg` - depending on source / target - in the teamviewer-o-matic directory. It will get detected and imported then after the TeamViewer Setup is done. 
 
----
-
 ##### Important infos about the settings import #####
 I've never tested importing host settings on full, or the other way around. But I wouldn't recommend it, so don't mix them up.
 
