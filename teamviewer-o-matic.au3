@@ -51,21 +51,19 @@ Func __readLanguageStrings($sLanguageToUse, $sVariant)
 		$wTitle3 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep1Title", "")
 		$wTitle4 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep2Title", "")
 		$wTitleInitial = IniRead($sLangFile, $sVariant & "_WindowTitles", "InitialLaunchTitle", "")
-		If $sVariant == "Host" Then
-			$wTitleInfo = IniRead($sLangFile, $sVariant & "_WindowTitles", "InfoTitle", "")
-		EndIf
+		$wTitleInfo = IniRead($sLangFile, $sVariant & "_WindowTitles", "InfoTitle", "")
 
 		$wUnattendedStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStartText", "")
 		$wUnattendedStep1Text = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStep1Text", "")
 		$wUnattendedStep2Text = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStep2Text", "")
 		$wUnattendedFinishText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedFinishText", "")
 		$wInitialLaunchText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InitialLaunchText", "")
+		$wInfoText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InfoText", "")
 		If $sVariant == "Host" Then
 			$wTextAreaOfUsage = IniRead($sLangFile, $sVariant & "_WindowTexts", "AreaOfUsage", "")
 			$wTextLicense = IniRead($sLangFile, $sVariant & "_WindowTexts", "License", "")
 			$wTextComponents = IniRead($sLangFile, $sVariant & "_WindowTexts", "Components", "")
 			$wTextTargetDir = IniRead($sLangFile, $sVariant & "_WindowTexts", "TargetDir", "")
-			$wInfoText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InfoText", "")
 		Else
 			$wInstallStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InstallStartText", "")
 			$wAdvancedOptionsText = IniRead($sLangFile, $sVariant & "_WindowTexts", "AdvancedOptionsText", "")
