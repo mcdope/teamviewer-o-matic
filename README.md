@@ -35,11 +35,11 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
 
 #### Supported TeamViewer versions ####
  -  TeamViewer 10 
-     - last tested with 10.0.47484 (german and italian)
+     - last tested with 10.0.47484 (german, italian, english)
      - branch `teamviewer-10`
      - released as `v2.0.10.<minor>`
  -  TeamViewer 11
-     - last tested with 11.0.50714 beta (german)
+     - last tested with 11.0.50714 beta (german, italian, english)
      - branch `teamviewer-11`
      - released as `v2.0.11.<minor>`
 
