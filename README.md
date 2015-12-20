@@ -19,7 +19,7 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
 
 1. Compile the script into an actual executable, see the [AutoIt documentation](https://www.autoitscript.com/autoit3/docs/intro/compiler.htm) for details.
 2. Copy `teamviewer-o-matic.conf.sample`, rename the copy to `teamviewer-o-matic.conf` and fill it with your details.
-3. Run `teamviewer-o-matic.exe <Full|Host> <languageToUse>`, a tray tip telling you it's waiting for setup will appear.  
+3. Run `teamviewer-o-matic.exe <Full|Host> <languageToUse>`, a tray tip telling you it's waiting for setup will appear.
 (And yes, `Full` or `Host` MUST be given in this casing - with first letter uppercase and rest lowercase)
 4. Run the choosen TeamViewer installer and watch the magic.
 
@@ -30,16 +30,19 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
  -  German - Use with "german" as param, translation by Tobias Bäumer
  -  Italian - Use with "italian" as param, translation by Simone Naldi
  -  English - Use with "english" as param, translation by Tobias Bäumer
+ -  Russian - Use with "russian" as param, translation by Tobias Bäumer
+ (Note: I don't speak russian, so the tooltips are english since I can't translate 'em properly)
 
 ---
 
 #### Supported TeamViewer versions ####
- -  TeamViewer 10 
+ -  TeamViewer 10
      - last tested with 10.0.47484 (german, italian, english)
      - branch `teamviewer-10`
      - released as `v2.0.10.<minor>`
+	 - IMPORTANT: This branch is deprecated. All feature work will happen on teamviewer-11
  -  TeamViewer 11
-     - last tested with 11.0.50714 beta (german, italian, english)
+     - last tested with 11.0.53254.0 (german, italian, russian)
      - branch `teamviewer-11`
      - released as `v2.0.11.<minor>`
 
@@ -59,14 +62,14 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
 
 #### Importing a TeamViewer settings export ####
 
-It is also possible to have teamviewer-o-matic import a settings export from TeamViewer. To do so simply export the settings from a manually configured client. You will get a `.reg` file then, put this file as `tv_full.reg` or `tv_host.reg` - depending on source / target - in the teamviewer-o-matic directory. It will get detected and imported then after the TeamViewer Setup is done. 
+It is also possible to have teamviewer-o-matic import a settings export from TeamViewer. To do so simply export the settings from a manually configured client. You will get a `.reg` file then, put this file as `tv_full.reg` or `tv_host.reg` - depending on source / target - in the teamviewer-o-matic directory. It will get detected and imported then after the TeamViewer Setup is done.
 
 ##### Important infos about the settings import #####
 I've never tested importing host settings on full, or the other way around. But I wouldn't recommend it, so don't mix them up.
 
-Importing old settings on newer version seems to work, I tried by accident when testing the `teamviewer-11` branch. But again: I wouldn't recommend it. 
+Importing old settings on newer version seems to work, I tried by accident when testing the `teamviewer-11` branch. But again: I wouldn't recommend it.
 
-Also keep in mind that, according to user reports, TeamViewer exports the settings incorrectly if running on x64. It creates entries like `HKEY_LOCAL_MACHINE\SOFTWARE\TeamViewer` while it should be `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\TeamViewer`. You need to manually edit those (open the .reg file in Notepad or another text editor), else the file will get imported - but will have no effect. 
+Also keep in mind that, according to user reports, TeamViewer exports the settings incorrectly if running on x64. It creates entries like `HKEY_LOCAL_MACHINE\SOFTWARE\TeamViewer` while it should be `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\TeamViewer`. You need to manually edit those (open the .reg file in Notepad or another text editor), else the file will get imported - but will have no effect.
 
 This is because without editing the entries land in the registry section for x64 executables, but TeamViewer runs on the Wow6432 subsystem since it's a 32bit executable and so its RegRead api calls get redirected. (Correct me if I'm wrong, but that's how I understood Windows and it's APIs)
 
