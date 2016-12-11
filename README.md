@@ -46,7 +46,7 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
      - branch `teamviewer-11`
      - released as `v2.0.11.<minor>`
  -  TeamViewer 12
-     - last tested with (german only)
+     - last tested with 12.1.5697.0 (german only)
      - branch `teamviewer-12`
      - released as `v2.0.12.<minor>`
 
