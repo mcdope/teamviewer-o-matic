@@ -5,12 +5,12 @@
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Comment=TeamViewer unattented installscript
 #AutoIt3Wrapper_Res_Description=This script automates the TeamViewer setup
-#AutoIt3Wrapper_Res_Fileversion=2.0.11.1
-#AutoIt3Wrapper_Res_LegalCopyright=© 2015 <https://blog.mcdope.org/>
+#AutoIt3Wrapper_Res_Fileversion=2.0.12.0
+#AutoIt3Wrapper_Res_LegalCopyright=© 2016 <https://blog.mcdope.org/>
 #AutoIt3Wrapper_Res_Language=1031
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Res_Field=License|GPLv2 (https://www.gnu.org/licenses/gpl-2.0.txt)
-#AutoIt3Wrapper_Res_Field=Sourcecode|https://github.com/mcdope/teamviewer-o-matic/tree/teamviewer-11
+#AutoIt3Wrapper_Res_Field=Sourcecode|https://github.com/mcdope/teamviewer-o-matic/tree/teamviewer-12
 #AutoIt3Wrapper_Res_Field=Homepage|https://blog.mcdope.org/tags/teamviewer/
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #include <MsgBoxConstants.au3>
@@ -26,12 +26,12 @@ If $CmdLine[0] < 2 Then
 	MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "Incorrect parameter count, be sure to give variant and language!");
 	Exit 1
 Else
-	$sType = $CmdLine[1]
+	$sType = StringLower($CmdLine[1])
 	$sLanguageToUse = $CmdLine[2]
 
 	__readLanguageStrings($sLanguageToUse, $sType)
 	__readConfigFile()
-	If $sType == "Host" Then
+	If $sType == "host" Then
 		__hostInstallerAutomation()
 	Else
 		__fullInstallerAutomation()
