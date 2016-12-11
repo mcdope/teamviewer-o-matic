@@ -45,6 +45,10 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
      - last tested with 11.0.53254.0 (german, italian, russian)
      - branch `teamviewer-11`
      - released as `v2.0.11.<minor>`
+ -  TeamViewer 12
+     - last tested with (german only)
+     - branch `teamviewer-12`
+     - released as `v2.0.12.<minor>`
 
 ---
 
@@ -71,7 +75,7 @@ Importing old settings on newer version seems to work, I tried by accident when 
 
 Also keep in mind that, according to user reports, TeamViewer exports the settings incorrectly if running on x64. It creates entries like `HKEY_LOCAL_MACHINE\SOFTWARE\TeamViewer` while it should be `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\TeamViewer`. You need to manually edit those (open the .reg file in Notepad or another text editor), else the file will get imported - but will have no effect.
 
-This is because without editing the entries land in the registry section for x64 executables, but TeamViewer runs on the Wow6432 subsystem since it's a 32bit executable and so its RegRead api calls get redirected. (Correct me if I'm wrong, but that's how I understood Windows and it's APIs)
+This is because without editing the entries land in the registry section for x64 executables, but TeamViewer runs on the Wow6432 subsystem since it's a 32bit executable and so its RegRead api calls get redirected. (Correct me if I'm wrong, but that's how I understood Windows and its APIs)
 
 ---
 
