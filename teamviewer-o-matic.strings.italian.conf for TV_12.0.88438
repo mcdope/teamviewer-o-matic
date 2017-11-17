@@ -1,0 +1,53 @@
+[Full_WindowTitles]
+MainTitle=Installazione di TeamViewer 12
+UnattendedMainTitle=Accesso automatico
+UnattendedStep1Title=Accesso automatico - Fase 1 di 2
+UnattendedStep2Title=Accesso automatico - Fase 2 di 2
+InitialLaunchTitle=TeamViewer
+InfoTitle=TeamViewer
+
+[Full_WindowTexts]
+InstallStartText=Installare per controllare in seguito questo computer da remoto
+AdvancedOptionsText=Impostazioni avanzate
+UnattendedStartText=Imposta accesso automatico
+UnattendedStep1Text=Password
+UnattendedStep2Text=Possiedo già un account TeamViewer
+UnattendedFinishText=Procedura guidata in corso
+InitialLaunchText=Controlla computer remoto
+InfoText=
+
+[Full_TrayTips]
+TrayTitle=Installazione automatica di TeamViewer 12
+InstallStartTip=In attesa del file di installazione...
+ConfigStartTip=Configurazione dell'installazione...
+UnattendedStartTip=Installazione terminata, il computer viene aggiunto alla lista dei contatti...
+ImportRegTip=Tutto regolato, solo un paio di impostazioni finali...
+FinishedTip=Tutto fatto - Chiudo e me ne vado.
+
+[Host_WindowTitles]
+MainTitle=Installazione di TeamViewer 12 Host
+UnattendedMainTitle=Accesso automatico
+UnattendedStep1Title=Accesso automatico - Fase 1 di 2
+UnattendedStep2Title=Accesso automatico - Fase 2 di 2
+InitialLaunchTitle=TeamViewer
+InfoTitle=Informazioni
+
+[Host_WindowTexts]
+AreaOfUsage=Ambito di utilizzo
+License=Accordo di licenza
+Components=Utilizza i componenti TeamViewer
+TargetDir=Scelta della cartella di installazione
+UnattendedStartText=Imposta accesso automatico
+UnattendedStep1Text=Password
+UnattendedStep2Text=Possiedo già un account TeamViewer
+UnattendedFinishText=Procedura guidata in corso
+InitialLaunchText=www.teamviewer.com
+InfoText=TeamViewer Host è stato installato sul computer e si avvierà automaticamente all'apertura di Windows. Utilizzare l'ID seguente e la password utilizzata durante l'installazione per accedere da remoto a questo computer.
+
+[Host_TrayTips]
+TrayTitle=Installazione automatica di TeamViewer 12 Host
+InstallStartTip=In attesa del file di installazione...
+ConfigStartTip=Configurazione dell'installazione...
+UnattendedStartTip=Installazione terminata, il computer viene aggiunto alla lista dei contatti...
+ImportRegTip=Tutto regolato, solo un paio di impostazioni finali...
+FinishedTip=Tutto fatto - Chiudo e me ne vado.
