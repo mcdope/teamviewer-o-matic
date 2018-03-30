@@ -6,7 +6,7 @@ This script "remote control" the TeamViewer and TeamViewer Host installers to al
 
 ### License ###
 
-This project is licensed under the GPLv2. See the `LICENSE` file, or the [GNU website](https://www.gnu.org/licenses/gpl-2.0.txt), for details.
+This project is licensed under the GPLv3. See the `LICENSE` file, or the [GNU website](https://www.gnu.org/licenses/gpl-3.0.txt), for details.
 
 ---
 
