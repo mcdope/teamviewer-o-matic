@@ -19,8 +19,7 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
 
 1. Compile the script into an actual executable, see the [AutoIt documentation](https://www.autoitscript.com/autoit3/docs/intro/compiler.htm) for details.
 2. Copy `teamviewer-o-matic.conf.sample`, rename the copy to `teamviewer-o-matic.conf` and fill it with your details.
-3. Run `teamviewer-o-matic.exe <Full|Host> <languageToUse>`, a tray tip telling you it's waiting for setup will appear.
-(And yes, `Full` or `Host` MUST be given in this casing - with first letter uppercase and rest lowercase)
+3. Run `teamviewer-o-matic.exe <full|host> <languageToUse>`, a tray tip telling you it's waiting for setup will appear.
 4. Run the choosen TeamViewer installer and watch the magic.
 
 ---
@@ -29,9 +28,6 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
 
  -  German - Use with "german" as param, translation by Tobias Bäumer
  -  Italian - Use with "italian" as param, translation by Simone Naldi
- -  English - Use with "english" as param, translation by Tobias Bäumer
- -  Russian - Use with "russian" as param, translation by Tobias Bäumer
- (Note: I don't speak russian, so the tooltips are english since I can't translate 'em properly)
 
 ---
 
@@ -49,6 +45,10 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
      - last tested with 12.1.5697.0 (german only)
      - branch `teamviewer-12`
      - released as `v2.0.12.<minor>`
+ -  TeamViewer 13
+     - last tested with 13.0.6447
+     - branch `teamviewer-13`
+     - released as `v2.0.13.<minor>`
 
 ---
 
@@ -90,6 +90,8 @@ To add a new language:
 1. Copy an existing language file (i.e `teamviewer-o-matic.strings.german.conf`), rename the copy to `teamviewer-o-matic.strings.myFancyLanguage.conf`. `myFancyLanguage` is what you will later use when running `teamviewer-o-matic.exe`.
 2. Replace the texts in the categories `Full_WindowTitles`, `Full_WindowTexts`, `Host_WindowTitles`, `Host_WindowTexts` with their equivalents from the TeamViewer language you want to use. They are in order of appearance in setup flow, so it should be easy to get them even if you don't understand german. Else there is still Google Translate ;).
 3. Replace the texts in `Full_TrayTips` and `Host_TrayTips` to also localize teamviewer-o-matic's traytips (optional).
+
+In case you want to add support for english or russian, you can use the files from `teamviewer-12` branch as starting point. Both where supported at some point, but I personally don't need them and don't want to maintain them anymore.
 
 ---
 

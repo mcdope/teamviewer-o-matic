@@ -5,21 +5,22 @@
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Comment=TeamViewer unattented installscript
 #AutoIt3Wrapper_Res_Description=This script automates the TeamViewer setup
-#AutoIt3Wrapper_Res_Fileversion=2.0.12.0
-#AutoIt3Wrapper_Res_LegalCopyright=© 2016 <https://blog.mcdope.org/>
+#AutoIt3Wrapper_Res_Fileversion=2.0.13.0
+#AutoIt3Wrapper_Res_LegalCopyright=© 2018 <https://blog.mcdope.org/>
 #AutoIt3Wrapper_Res_Language=1031
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
-#AutoIt3Wrapper_Res_Field=License|GPLv2 (https://www.gnu.org/licenses/gpl-2.0.txt)
-#AutoIt3Wrapper_Res_Field=Sourcecode|https://github.com/mcdope/teamviewer-o-matic/tree/teamviewer-12
+#AutoIt3Wrapper_Res_Field=License|GPLv3 (https://www.gnu.org/licenses/gpl-3.0.txt)
+#AutoIt3Wrapper_Res_Field=Sourcecode|https://github.com/mcdope/teamviewer-o-matic/tree/teamviewer-13
 #AutoIt3Wrapper_Res_Field=Homepage|https://blog.mcdope.org/tags/teamviewer/
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #include <MsgBoxConstants.au3>
 
 Global $wTitle = "", $wTitle2 = "", $wTitle3 = "", $wTitle4 = "", $wTitleInitial = ""
 Global $wInstallStartText = "", $wAdvancedOptionsText = "", $wUnattendedStartText = "", $wUnattendedStep1Text = "", $wUnattendedStep2Text = "", $wUnattendedFinishText = "", $wInitialLaunchText = ""
-Global $sTrayTitle = "", $sInstallStartTip = "", $sConfigStartTip = "", $sUnattendedStartTip = "", $sImportRegTip = "", $sFinishedTip = ""
+Global $sTrayTitle = "", $sInstallStartTip = "", $sConfigStartTip = "", $sUnattendedStartTip = "", $sUnattendedSkipTip = "", $sImportRegTip = "", $sFinishedTip = ""
 Global $wTitleInfo = "", $wInfoText = "", $wTextAreaOfUsage = "", $wTextLicense = "", $wTextComponents = "", $wTextTargetDir = ""
 Global $strUser = "", $strPass = "", $strPassword = "", $iDelay  = 250
+Global $bAddToContacts = False
 
 Global $sType, $sLanguageToUse
 If $CmdLine[0] < 2 Then
@@ -31,6 +32,7 @@ Else
 
 	__readLanguageStrings($sLanguageToUse, $sType)
 	__readConfigFile()
+	Opt("WinTitleMatchMode", 2)
 	If $sType == "host" Then
 		__hostInstallerAutomation()
 	Else
@@ -41,12 +43,12 @@ EndIf
 
 
 
-Func __readLanguageStrings($sLanguageToUse, $sVariant)
+Func __readLanguageStrings($sLanguageToUse,  $sVariant)
 	Local $sLangFile = @ScriptDir & "\teamviewer-o-matic.strings." & $sLanguageToUse & ".conf"
 
 	Local $iFileExists = FileExists($sLangFile)
 	If $iFileExists Then
-		$wTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "MainTitle", "")
+		$wTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "MainTitle", "default")
 		$wTitle2 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedMainTitle", "")
 		$wTitle3 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep1Title", "")
 		$wTitle4 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep2Title", "")
@@ -73,6 +75,7 @@ Func __readLanguageStrings($sLanguageToUse, $sVariant)
 		$sInstallStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "InstallStartTip", "")
 		$sConfigStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ConfigStartTip", "")
 		$sUnattendedStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedStartTip", "")
+		$sUnattendedSkipTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedSkipTip", "")
 		$sImportRegTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ImportRegTip", "")
 		$sFinishedTip = IniRead($sLangFile, $sVariant & "_TrayTips", "FinishedTip", "")
 	Else
@@ -89,11 +92,16 @@ Func __readConfigFile()
 	Opt("SendKeyDelay", Int(IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Advanced", "SendKeyDelay", "250")) )
 
 	$iErr = 0;
-	If $strUser == "" Then
+	If $strUser == "" And $strPass == "" Then
+		$bAddToContacts = False
+	Else
+		$bAddToContacts = True
+	EndIf
+	If $bAddToContacts == True And $strUser == "" Then
 		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account ('AccountUsername') couldn't be found in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
-	If $strPass == "" Then
+	If $bAddToContacts == True And $strPass == "" Then
 		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account password ('AccountPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
@@ -124,7 +132,7 @@ Func __fullInstallerAutomation()
 	WinWaitClose($wTitle)
 
 	; Install done - adding to list
-	__addToContacts()
+	__addToContacts($bAddToContacts)
 
 	; Close initial launch
 	WinWait($wTitleInitial, $wInitialLaunchText)
@@ -179,7 +187,7 @@ Func __hostInstallerAutomation()
 	WinWaitClose($wTitle)
 
 	; Install done - adding to list
-	__addToContacts()
+	__addToContacts($bAddToContacts)
 
 	; Close info dialog
 	WinWait($wTitleInitial, $wInitialLaunchText)
@@ -207,8 +215,12 @@ Func __hostInstallerAutomation()
 	TrayTip($sTrayTitle, $sFinishedTip, 15, 1)
 EndFunc
 
-Func __addToContacts()
-	TrayTip($sTrayTitle, $sUnattendedStartTip, 0, 1)
+Func __addToContacts($addToContacts = True)
+	If $addToContacts == True Then
+		TrayTip($sTrayTitle, $sUnattendedStartTip, 0, 1)
+	Else
+		TrayTip($sTrayTitle, $sUnattendedSkipTip, 0, 1)
+	EndIf
 	WinWait($wTitle2, $wUnattendedStartText)
 	WinActivate($wTitle2)
 	Sleep($iDelay)
@@ -227,10 +239,14 @@ Func __addToContacts()
 	WinActivate($wTitle4)
 	Sleep($iDelay)
 	WinWaitActive($wTitle4)
-	ControlClick($wTitle4, "", "[CLASS:Button; INSTANCE:2]") ; Ich habe bereits ein TeamViewer Konto
-	ControlSend($wTitle4, "", "[CLASS:Edit; INSTANCE:2]", $strUser, 1) ; User
-	Sleep($iDelay)
-	ControlSend($wTitle4, "", "[CLASS:Edit; INSTANCE:3]", $strPass, 1) ; Pass
+	If $addToContacts Then
+		ControlClick($wTitle4, "", "[CLASS:Button; INSTANCE:2]") ; Ich habe bereits ein TeamViewer Konto
+		ControlSend($wTitle4, "", "[CLASS:Edit; INSTANCE:2]", $strUser, 1) ; User
+		Sleep($iDelay)
+		ControlSend($wTitle4, "", "[CLASS:Edit; INSTANCE:3]", $strPass, 1) ; Pass
+	Else
+		ControlClick($wTitle4, "", "[CLASS:Button; INSTANCE:3]") ; Ich möchte jetzt kein TeamViewer Konto erstellen
+	EndIf
 	Sleep($iDelay)
 	ControlClick($wTitle4, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
 	WinWait($wTitle2, $wUnattendedFinishText)
