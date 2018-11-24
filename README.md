@@ -1,6 +1,6 @@
 ### About ###
 
-This script "remote control" the TeamViewer and TeamViewer Host installers to allow heavy users to deploy it unattended, without being forced to use the (imho way to expensive for private usage) MSI package.
+This script does "remote control" the TeamViewer and TeamViewer Host installers to allow heavy users to deploy it unattended, without being forced to use the (imho way to expensive for private usage) MSI package.
 
 ---
 
@@ -36,7 +36,6 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
      - last tested with 10.0.47484 (german, italian, english)
      - branch `teamviewer-10`
      - released as `v2.0.10.<minor>`
-	 - IMPORTANT: This branch is deprecated. All feature work will happen on teamviewer-11
  -  TeamViewer 11
      - last tested with 11.0.53254.0 (german, italian, russian)
      - branch `teamviewer-11`
@@ -49,14 +48,21 @@ TeamViewer is a registered trademark by TeamViewer GmbH. I am in no way associat
      - last tested with 13.0.6447
      - branch `teamviewer-13`
      - released as `v2.0.13.<minor>`
+ -  TeamViewer 14
+     - last tested with 14.0.13880.0
+     - branch `teamviewer-14`
+     - released as `v2.0.14.<minor>`
 
 ---
 
 #### Config file `teamviewer-o-matic.conf` format details ####
 ##### Section `Setup` #####
+ -  `AddToContacts`: Set to 1 to enable "add device to account" functionality, set to 0 to only set unattended password
  -  `AccountUsername`: Your registered TeamViewer account name or email
  -  `AccountPassword`: Password for `AccountUsername`
  -  `ConnectPassword`: Password to set for unattended client access
+
+ Note that the "add device to account" functionality is kinda pointless these days. Unlike earlier, you now need to authorize new devices accessing the account. It requires to click a link in an email send to you. It IS possible to automate this, but it would be a pain in the ass and won't happen unless someone creates a pullrequest with that functionality.
 
 ##### Section `Advanced` #####
  -  `SleepDelay`: The script will sleep on some "more intense" setup steps if this is larger zero. Can be used to increase reliability on slow machines.
@@ -71,9 +77,9 @@ It is also possible to have teamviewer-o-matic import a settings export from Tea
 ##### Important infos about the settings import #####
 I've never tested importing host settings on full, or the other way around. But I wouldn't recommend it, so don't mix them up.
 
-Importing old settings on newer version seems to work, I tried by accident when testing the `teamviewer-11` branch. But again: I wouldn't recommend it.
+Importing old settings on newer versions seemed to work earlier, I once tried by accident when testing the `teamviewer-11` branch. But again: I wouldn't recommend it.
 
-Also keep in mind that, according to user reports, TeamViewer exports the settings incorrectly if running on x64. It creates entries like `HKEY_LOCAL_MACHINE\SOFTWARE\TeamViewer` while it should be `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\TeamViewer`. You need to manually edit those (open the .reg file in Notepad or another text editor), else the file will get imported - but will have no effect.
+Also keep in mind that, according to user reports, earlier TeamViewer versions exports the settings incorrectly if running on x64. It creates entries like `HKEY_LOCAL_MACHINE\SOFTWARE\TeamViewer` while it should be `HKEY_LOCAL_MACHINE\SOFTWARE\Wow6432Node\TeamViewer`. You need to manually edit those (open the .reg file in Notepad or another text editor), else the file will get imported - but will have no effect. This doesn't apply to current TeamViewer builds anymore.
 
 This is because without editing the entries land in the registry section for x64 executables, but TeamViewer runs on the Wow6432 subsystem since it's a 32bit executable and so its RegRead api calls get redirected. (Correct me if I'm wrong, but that's how I understood Windows and its APIs)
 

@@ -5,22 +5,22 @@
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Comment=TeamViewer unattented installscript
 #AutoIt3Wrapper_Res_Description=This script automates the TeamViewer setup
-#AutoIt3Wrapper_Res_Fileversion=2.0.13.0
+#AutoIt3Wrapper_Res_Fileversion=2.0.14.0
 #AutoIt3Wrapper_Res_LegalCopyright=© 2018 <https://blog.mcdope.org/>
 #AutoIt3Wrapper_Res_Language=1031
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
 #AutoIt3Wrapper_Res_Field=License|GPLv3 (https://www.gnu.org/licenses/gpl-3.0.txt)
-#AutoIt3Wrapper_Res_Field=Sourcecode|https://github.com/mcdope/teamviewer-o-matic/tree/teamviewer-13
+#AutoIt3Wrapper_Res_Field=Sourcecode|https://github.com/mcdope/teamviewer-o-matic/tree/teamviewer-14
 #AutoIt3Wrapper_Res_Field=Homepage|https://blog.mcdope.org/tags/teamviewer/
 #EndRegion ;**** Directives created by AutoIt3Wrapper_GUI ****
 #include <MsgBoxConstants.au3>
 
-Global $wTitle = "", $wTitle2 = "", $wTitle3 = "", $wTitle4 = "", $wTitleInitial = ""
-Global $wInstallStartText = "", $wAdvancedOptionsText = "", $wUnattendedStartText = "", $wUnattendedStep1Text = "", $wUnattendedStep2Text = "", $wUnattendedFinishText = "", $wInitialLaunchText = ""
-Global $sTrayTitle = "", $sInstallStartTip = "", $sConfigStartTip = "", $sUnattendedStartTip = "", $sUnattendedSkipTip = "", $sImportRegTip = "", $sFinishedTip = ""
-Global $wTitleInfo = "", $wInfoText = "", $wTextAreaOfUsage = "", $wTextLicense = "", $wTextComponents = "", $wTextTargetDir = ""
+Global $wtMainTitle = "", $wtUnattendedMainTitle = "", $wtUnattendedStep1Title = "", $wtUnattendedStep2Title = "", $wtInitialLaunchTitle = "", $wtUnattendedAuthorizeTitle = ""
+Global $wInstallStartText = "", $wAdvancedOptionsText = "", $wUnattendedStartText = "", $wUnattendedStep1Text = "", $wUnattendedStep2Text = "", $wUnattendedFinishText = "", $wInitialLaunchText = "", $wUnattendedAuthorizeText = ""
+Global $sTrayTitle = "", $sInstallStartTip = "", $sConfigStartTip = "", $sUnattendedStartTip = "", $sUnattendedStartNoAddSupportedTip = "", $sUnattendedStartNoAddTip = "", $sUnattendedSkipTip = "", $sImportRegTip = "", $sFinishedTip = ""
+Global $wtInfoTitle = "", $wInfoText = "", $wTextAreaOfUsage = "", $wTextLicense = "", $wTextComponents = "", $wTextTargetDir = ""
 Global $strUser = "", $strPass = "", $strPassword = "", $iDelay  = 250
-Global $bAddToContacts = False
+Global $bAddToContacts = 0
 
 Global $sType, $sLanguageToUse
 If $CmdLine[0] < 2 Then
@@ -48,12 +48,12 @@ Func __readLanguageStrings($sLanguageToUse,  $sVariant)
 
 	Local $iFileExists = FileExists($sLangFile)
 	If $iFileExists Then
-		$wTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "MainTitle", "default")
-		$wTitle2 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedMainTitle", "")
-		$wTitle3 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep1Title", "")
-		$wTitle4 = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep2Title", "")
-		$wTitleInitial = IniRead($sLangFile, $sVariant & "_WindowTitles", "InitialLaunchTitle", "")
-		$wTitleInfo = IniRead($sLangFile, $sVariant & "_WindowTitles", "InfoTitle", "")
+		$wtMainTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "MainTitle", "default")
+		$wtUnattendedMainTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedMainTitle", "")
+		$wtUnattendedStep1Title = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep1Title", "")
+		$wtUnattendedStep2Title = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedStep2Title", "")
+		$wtInitialLaunchTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "InitialLaunchTitle", "")
+		$wtInfoTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "InfoTitle", "")
 
 		$wUnattendedStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStartText", "")
 		$wUnattendedStep1Text = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedStep1Text", "")
@@ -66,6 +66,8 @@ Func __readLanguageStrings($sLanguageToUse,  $sVariant)
 			$wTextLicense = IniRead($sLangFile, $sVariant & "_WindowTexts", "License", "")
 			$wTextComponents = IniRead($sLangFile, $sVariant & "_WindowTexts", "Components", "")
 			$wTextTargetDir = IniRead($sLangFile, $sVariant & "_WindowTexts", "TargetDir", "")
+			$wUnattendedAuthorizeTitle = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedAuthorizeTitle", "")
+			$wUnattendedAuthorizeText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedAuthorizeText", "")
 		Else
 			$wInstallStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InstallStartText", "")
 			$wAdvancedOptionsText = IniRead($sLangFile, $sVariant & "_WindowTexts", "AdvancedOptionsText", "")
@@ -75,6 +77,8 @@ Func __readLanguageStrings($sLanguageToUse,  $sVariant)
 		$sInstallStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "InstallStartTip", "")
 		$sConfigStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ConfigStartTip", "")
 		$sUnattendedStartTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedStartTip", "")
+		$sUnattendedStartNoAddSupportedTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedStartNoAddSupportedTip", "")
+		$sUnattendedStartNoAddTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedStartNoAddTip", "")
 		$sUnattendedSkipTip = IniRead($sLangFile, $sVariant & "_TrayTips", "UnattendedSkipTip", "")
 		$sImportRegTip = IniRead($sLangFile, $sVariant & "_TrayTips", "ImportRegTip", "")
 		$sFinishedTip = IniRead($sLangFile, $sVariant & "_TrayTips", "FinishedTip", "")
@@ -85,6 +89,7 @@ Func __readLanguageStrings($sLanguageToUse,  $sVariant)
 EndFunc
 
 Func __readConfigFile()
+	$bAddToContacts = Int(IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Setup", "AddToContacts", 0))
 	$strUser = IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Setup", "AccountUsername", "")
 	$strPass = IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Setup", "AccountPassword", "")
 	$strPassword = IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Setup", "ConnectPassword", "")
@@ -92,16 +97,11 @@ Func __readConfigFile()
 	Opt("SendKeyDelay", Int(IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Advanced", "SendKeyDelay", "250")) )
 
 	$iErr = 0;
-	If $strUser == "" And $strPass == "" Then
-		$bAddToContacts = False
-	Else
-		$bAddToContacts = True
-	EndIf
-	If $bAddToContacts == True And $strUser == "" Then
+	If $bAddToContacts == 1 And $strUser == "" Then
 		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account ('AccountUsername') couldn't be found in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
-	If $bAddToContacts == True And $strPass == "" Then
+	If $bAddToContacts == 1 And $strPass == "" Then
 		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account password ('AccountPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
@@ -117,28 +117,28 @@ EndFunc
 Func __fullInstallerAutomation()
 	; Install
 	TrayTip($sTrayTitle, $sInstallStartTip, 0, 1)
-	WinWait($wTitle, $wInstallStartText)
+	WinWait($wtMainTitle, $wInstallStartText)
 	TrayTip($sTrayTitle, $sConfigStartTip, 0, 1)
-	WinActivate($wTitle)
+	WinActivate($wtMainTitle)
 	Sleep($iDelay)
-	WinWaitActive($wTitle)
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:5]") ; Installieren, um später aus der Ferne auf diesen Computer zuzugreifen check
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:8]") ; privat / nicht-kommerziell check
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:10]") ; Erweiterte Einstellungen check
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:2]") ; Stimme zu - weiter
-	WinWait($wTitle, $wAdvancedOptionsText)
+	WinWaitActive($wtMainTitle)
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:5]") ; Installieren, um später aus der Ferne auf diesen Computer zuzugreifen check
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:8]") ; privat / nicht-kommerziell check
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:10]") ; Erweiterte Einstellungen check
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Stimme zu - weiter
+	WinWait($wtMainTitle, $wAdvancedOptionsText)
 	Sleep($iDelay)
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:2]") ; Fertig stellen
-	WinWaitClose($wTitle)
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Fertig stellen
+	WinWaitClose($wtMainTitle)
 
-	; Install done - adding to list
-	__addToContacts($bAddToContacts)
+	; Install done - configuring unattended access
+	__configureUnattendedAccess($bAddToContacts, False)
 
 	; Close initial launch
-	WinWait($wTitleInitial, $wInitialLaunchText)
-	WinActivate($wTitleInitial, $wInitialLaunchText)
+	WinWait($wtInitialLaunchTitle, $wInitialLaunchText)
+	WinActivate($wtInitialLaunchTitle, $wInitialLaunchText)
 	Sleep($iDelay)
-	WinClose($wTitleInitial, $wInitialLaunchText)
+	WinClose($wtInitialLaunchTitle, $wInitialLaunchText)
 
 	; Import configuration (if exists)
 	Local $iFileExists = FileExists(@ScriptDir & "\tv_full.reg")
@@ -149,11 +149,11 @@ Func __fullInstallerAutomation()
 		RunWait(@ComSpec & " /c net start TeamViewer", @ScriptDir)
 
 		; Close info dialog which occurs after restarting the TeamViewer service
-		WinWait($wTitleInfo, $wInfoText)
-		WinActivate($wTitleInfo, $wInfoText)
+		WinWait($wtInfoTitle, $wInfoText)
+		WinActivate($wtInfoTitle, $wInfoText)
 		Sleep($iDelay)
-		WinWaitActive($wTitleInfo)
-		WinClose($wTitleInfo, $wInfoText)
+		WinWaitActive($wtInfoTitle)
+		WinClose($wtInfoTitle, $wInfoText)
 	EndIf
 
 	TrayTip($sTrayTitle, $sFinishedTip, 15, 1)
@@ -162,39 +162,39 @@ EndFunc
 Func __hostInstallerAutomation()
 	; Install
 	TrayTip($sTrayTitle, $sInstallStartTip, 0, 1)
-	WinWait($wTitle)
+	WinWait($wtMainTitle)
 	Sleep($iDelay)
 	TrayTip($sTrayTitle, $sConfigStartTip, 0, 1)
-	WinActivate($wTitle)
-	WinWaitActive($wTitle)
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:4]") ; Erweiterte Einstellungen check
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
-	WinWait($wTitle, $wTextAreaOfUsage)
+	WinActivate($wtMainTitle)
+	WinWaitActive($wtMainTitle)
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:4]") ; Erweiterte Einstellungen check
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
+	WinWait($wtMainTitle, $wTextAreaOfUsage)
 	Sleep($iDelay)
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:4]") ; Privat radio
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
-	WinWait($wTitle, $wTextLicense)
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:4]") ; Privat radio
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
+	WinWait($wtMainTitle, $wTextLicense)
 	Sleep($iDelay)
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:4]") ; Akzeptiere... check
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:5]") ; Privat check
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
-	WinWait($wTitle, $wTextComponents)
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:4]") ; Akzeptiere... check
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:5]") ; Privat check
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
+	WinWait($wtMainTitle, $wTextComponents)
 	Sleep($iDelay)
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
-	WinWait($wTitle, $wTextTargetDir)
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
+	WinWait($wtMainTitle, $wTextTargetDir)
 	Sleep($iDelay)
-	ControlClick($wTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
-	WinWaitClose($wTitle)
+	ControlClick($wtMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
+	WinWaitClose($wtMainTitle)
 
-	; Install done - adding to list
-	__addToContacts($bAddToContacts)
+	; Install done - configuring unattended access
+	__configureUnattendedAccess($bAddToContacts, True)
 
 	; Close info dialog
-	WinWait($wTitleInitial, $wInitialLaunchText)
-	WinActivate($wTitleInitial)
+	WinWait($wtInitialLaunchTitle, $wInitialLaunchText)
+	WinActivate($wtInitialLaunchTitle)
 	Sleep($iDelay)
-	WinWaitActive($wTitleInitial)
-	ControlClick($wTitleInitial, "", "[CLASS:Button; INSTANCE:1]") ; OK
+	WinWaitActive($wtInitialLaunchTitle)
+	ControlClick($wtInitialLaunchTitle, "", "[CLASS:Button; INSTANCE:1]") ; OK
 
 	; Import configuration (if exists)
 	Local $iFileExists = FileExists(@ScriptDir & "\tv_host.reg")
@@ -205,56 +205,80 @@ Func __hostInstallerAutomation()
 		RunWait(@ComSpec & " /c net start TeamViewer", @ScriptDir)
 
 		; Close info dialog which occurs after restarting the TeamViewer service
-		WinWait($wTitleInfo, $wInfoText)
-		WinActivate($wTitleInfo, $wInfoText)
+		WinWait($wtInfoTitle, $wInfoText)
+		WinActivate($wtInfoTitle, $wInfoText)
 		Sleep($iDelay)
-		WinWaitActive($wTitleInfo)
-		ControlClick($wTitleInfo, "", "[CLASS:Button; INSTANCE:1]") ; OK
+		WinWaitActive($wtInfoTitle)
+		ControlClick($wtInfoTitle, "", "[CLASS:Button; INSTANCE:1]") ; OK
 	EndIf
 
 	TrayTip($sTrayTitle, $sFinishedTip, 15, 1)
 EndFunc
 
-Func __addToContacts($addToContacts = True)
-	If $addToContacts == True Then
-		TrayTip($sTrayTitle, $sUnattendedStartTip, 0, 1)
+Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = False)
+	If $addToContacts == 1 Then
+		If $isAccountAddSupported == True Then
+			TrayTip($sTrayTitle, $sUnattendedStartTip, 0, 1)
+		Else
+			TrayTip($sTrayTitle, $sUnattendedStartNoAddSupportedTip, 0, 1)
+		EndIf
 	Else
-		TrayTip($sTrayTitle, $sUnattendedSkipTip, 0, 1)
+		TrayTip($sTrayTitle, $sUnattendedStartNoAddTip, 0, 1)
 	EndIf
-	WinWait($wTitle2, $wUnattendedStartText)
-	WinActivate($wTitle2)
+
+	WinWait($wtUnattendedMainTitle, $wUnattendedStartText)
+	WinActivate($wtUnattendedMainTitle)
 	Sleep($iDelay)
-	WinWaitActive($wTitle2)
-	ControlClick($wTitle2, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
-	WinWait($wTitle3, $wUnattendedStep1Text)
-	WinActivate($wTitle3)
+	WinWaitActive($wtUnattendedMainTitle)
+	ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
+	WinWait($wtUnattendedStep1Title, $wUnattendedStep1Text)
+	WinActivate($wtUnattendedStep1Title)
 	Sleep($iDelay)
-	WinWaitActive($wTitle3)
-	ControlSend($wTitle3, "", "[CLASS:Edit; INSTANCE:2]", $strPassword, 1) ; Passwort 1
+	WinWaitActive($wtUnattendedStep1Title)
+	ControlSend($wtUnattendedStep1Title, "", "[CLASS:Edit; INSTANCE:2]", $strPassword, 1) ; Passwort 1
 	Sleep($iDelay)
-	ControlSend($wTitle3, "", "[CLASS:Edit; INSTANCE:3]", $strPassword, 1) ; Passwort confirm
+	ControlSend($wtUnattendedStep1Title, "", "[CLASS:Edit; INSTANCE:3]", $strPassword, 1) ; Passwort confirm
 	Sleep($iDelay)
-	ControlClick($wTitle3, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
-	WinWait($wTitle4, $wUnattendedStep2Text)
-	WinActivate($wTitle4)
-	Sleep($iDelay)
-	WinWaitActive($wTitle4)
-	If $addToContacts Then
-		ControlClick($wTitle4, "", "[CLASS:Button; INSTANCE:2]") ; Ich habe bereits ein TeamViewer Konto
-		ControlSend($wTitle4, "", "[CLASS:Edit; INSTANCE:2]", $strUser, 1) ; User
+	ControlClick($wtUnattendedStep1Title, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
+
+	; Starting with TV14, the full version doesn't support "add to account" in the setup wizard anymore
+	; @todo: find new way to do it
+	If $isAccountAddSupported Then
+		WinWait($wtUnattendedStep2Title, $wUnattendedStep2Text)
+		WinActivate($wtUnattendedStep2Title)
 		Sleep($iDelay)
-		ControlSend($wTitle4, "", "[CLASS:Edit; INSTANCE:3]", $strPass, 1) ; Pass
+		WinWaitActive($wtUnattendedStep2Title)
+
+		If $addToContacts Then
+			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:2]") ; Ich habe bereits ein TeamViewer Konto
+			ControlSend($wtUnattendedStep2Title, "", "[CLASS:Edit; INSTANCE:2]", $strUser, 1) ; User
+			Sleep($iDelay)
+			ControlSend($wtUnattendedStep2Title, "", "[CLASS:Edit; INSTANCE:3]", $strPass, 1) ; Pass
+			Sleep($iDelay)
+			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
+
+			WinWait($wtUnattendedAuthorizeTitle, $wUnattendedAuthorizeText)
+			WinActivate($wtUnattendedAuthorizeTitle)
+			Sleep($iDelay)
+			WinWaitActive($wtUnattendedAuthorizeTitle)
+			ControlClick($wtUnattendedAuthorizeTitle, "", "[CLASS:Button; INSTANCE:4]") ; OK
+			ControlClick($wtUnattendedAuthorizeTitle, "", "[CLASS:Button; INSTANCE:8]") ; Abbrechen - Workaround because we can't finish the authorization
+		Else
+			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:3]") ; Ich möchte jetzt kein TeamViewer Konto erstellen
+			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
+
+			WinWait($wtUnattendedMainTitle, $wUnattendedFinishText)
+			WinActivate($wtUnattendedMainTitle)
+			Sleep($iDelay)
+			WinWaitActive($wtUnattendedMainTitle)
+			ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:7]") ; Fertigstellen
+		EndIf
 	Else
-		ControlClick($wTitle4, "", "[CLASS:Button; INSTANCE:3]") ; Ich möchte jetzt kein TeamViewer Konto erstellen
+		WinWaitActive($wtUnattendedMainTitle)
+		ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:3]") ; Beenden
 	EndIf
+
 	Sleep($iDelay)
-	ControlClick($wTitle4, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
-	WinWait($wTitle2, $wUnattendedFinishText)
-	WinActivate($wTitle2)
-	Sleep($iDelay)
-	WinWaitActive($wTitle2)
-	ControlClick($wTitle2, "", "[CLASS:Button; INSTANCE:7]") ; Fertigstellen
-	Sleep($iDelay)
-	WinWaitClose($wTitle2)
+	WinWaitClose($wtUnattendedMainTitle)
 	TrayTip($sTrayTitle, "", 0, 1)
 EndFunc
