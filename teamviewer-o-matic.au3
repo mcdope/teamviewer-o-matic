@@ -97,18 +97,22 @@ Func __readConfigFile()
 	Opt("SendKeyDelay", Int(IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Advanced", "SendKeyDelay", "250")) )
 
 	$iErr = 0;
-	If $bAddToContacts == 1 And $strUser == "" Then
-		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account ('AccountUsername') couldn't be found in 'teamviewer-o-matic.conf'!");
-		$iErr = 1;
+	If StringLower($CmdLine[1]) == "host" Then
+		If $bAddToContacts == 1 And $strUser == "" Then
+			MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account ('AccountUsername') couldn't be found, or was empty, in 'teamviewer-o-matic.conf'!");
+			$iErr = 1;
+		EndIf
+		If $bAddToContacts == 1 And $strPass == "" Then
+			MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account password ('AccountPassword') couldn't be found, or was empty, in 'teamviewer-o-matic.conf'!");
+			$iErr = 1;
+		EndIf
 	EndIf
-	If $bAddToContacts == 1 And $strPass == "" Then
-		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account password ('AccountPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
-		$iErr = 1;
-	EndIf
+
 	If $strPassword == "" Then
-		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The connection password ('ConnectPassword') couldn't be found in 'teamviewer-o-matic.conf'!");
+		MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The connection password ('ConnectPassword') couldn't be found, or was empty, in 'teamviewer-o-matic.conf'!");
 		$iErr = 1;
 	EndIf
+
 	If $iErr == 1 Then
 		Exit 3
 	EndIf
@@ -242,7 +246,21 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 	ControlClick($wtUnattendedStep1Title, "", "[CLASS:Button; INSTANCE:2]") ; Weiter
 
 	; Starting with TV14, the full version doesn't support "add to account" in the setup wizard anymore
-	; @todo: find new way to do it
+	; In theory, it could be realized by automating the settings screen. But it would be kinda pointless,
+	; since the whole functionality will only work if the current device is already trusted to access the
+	; TeamViewer account.
+	;
+	; That trusting process could be automated too, by implementing a POP/IMAP check for the mail, regex'ing
+	; the link, presenting it in a browser to click, waiting for the user to do the magic, and then continuing
+	; "add to contacts". But a) it would be a pain in the ass and b) it wouldn't be really unattended anymore.
+	; If someone is willing to do it, feel free to submit a pull request. But I won't do it...
+	;
+	; Alternativly, for paid TeamViewer plans - starting at ONLY 19€ PER MONTH FOR ONE SESSION (and that on sale,
+	; usually 27,90€) - it would be possible to use a script (see TeamViewer docs and MMC). But again, it won't
+	; happen except someone creates a pull request.
+	;
+	; If someone is willing to pay for it to be integrated, contact me and we will figure something out.
+
 	If $isAccountAddSupported Then
 		WinWait($wtUnattendedStep2Title, $wUnattendedStep2Text)
 		WinActivate($wtUnattendedStep2Title)
@@ -257,12 +275,19 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 			Sleep($iDelay)
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
 
-			WinWait($wtUnattendedAuthorizeTitle, $wUnattendedAuthorizeText)
-			WinActivate($wtUnattendedAuthorizeTitle)
-			Sleep($iDelay)
-			WinWaitActive($wtUnattendedAuthorizeTitle)
-			ControlClick($wtUnattendedAuthorizeTitle, "", "[CLASS:Button; INSTANCE:4]") ; OK
-			ControlClick($wtUnattendedAuthorizeTitle, "", "[CLASS:Button; INSTANCE:8]") ; Abbrechen - Workaround because we can't finish the authorization
+			If WinWait($wtUnattendedMainTitle, $wUnattendedFinishText, (($iDelay/1000)*2)) == 0 Then ; ... no success message after iDelay*2 - so we assume this device is unauthorized
+				WinWait($wtUnattendedAuthorizeTitle, $wUnattendedAuthorizeText)
+				WinActivate($wtUnattendedAuthorizeTitle)
+				Sleep($iDelay)
+				WinWaitActive($wtUnattendedAuthorizeTitle)
+				ControlClick($wtUnattendedAuthorizeTitle, "", "[CLASS:Button; INSTANCE:4]") ; OK
+				ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:8]") ; Abbrechen - Workaround because we can't finish the authorization
+			Else ; ... "add to contacts" was successful
+				WinActivate($wtUnattendedMainTitle)
+				Sleep($iDelay)
+				WinWaitActive($wtUnattendedMainTitle)
+				ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:7]") ; Fertigstellen
+			EndIf
 		Else
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:3]") ; Ich möchte jetzt kein TeamViewer Konto erstellen
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
@@ -273,9 +298,6 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 			WinWaitActive($wtUnattendedMainTitle)
 			ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:7]") ; Fertigstellen
 		EndIf
-	Else
-		WinWaitActive($wtUnattendedMainTitle)
-		ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:3]") ; Beenden
 	EndIf
 
 	Sleep($iDelay)
