@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Comment=TeamViewer unattented installscript
 #AutoIt3Wrapper_Res_Description=This script automates the TeamViewer setup
-#AutoIt3Wrapper_Res_Fileversion=2.0.14.0
+#AutoIt3Wrapper_Res_Fileversion=2.0.14.1
 #AutoIt3Wrapper_Res_LegalCopyright=© 2018 <https://blog.mcdope.org/>
 #AutoIt3Wrapper_Res_Language=1031
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
