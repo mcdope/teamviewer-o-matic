@@ -97,12 +97,12 @@ Func __readConfigFile()
 	Opt("SendKeyDelay", Int(IniRead(@ScriptDir & "\teamviewer-o-matic.conf", "Advanced", "SendKeyDelay", "250")) )
 
 	$iErr = 0;
-	If StringLower($CmdLine[1]) == "host" Then
-		If $bAddToContacts == 1 And $strUser == "" Then
+	If StringLower($CmdLine[1]) == "host" And $bAddToContacts == 1 Then
+		If $strUser == "" Then
 			MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account ('AccountUsername') couldn't be found, or was empty, in 'teamviewer-o-matic.conf'!");
 			$iErr = 1;
 		EndIf
-		If $bAddToContacts == 1 And $strPass == "" Then
+		If $strPass == "" Then
 			MsgBox(BitOR($MB_ICONERROR, $MB_SYSTEMMODAL), "Error!", "The Teamviewer-Account password ('AccountPassword') couldn't be found, or was empty, in 'teamviewer-o-matic.conf'!");
 			$iErr = 1;
 		EndIf
