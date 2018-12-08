@@ -5,7 +5,7 @@
 #AutoIt3Wrapper_UseUpx=y
 #AutoIt3Wrapper_Res_Comment=TeamViewer unattented installscript
 #AutoIt3Wrapper_Res_Description=This script automates the TeamViewer setup
-#AutoIt3Wrapper_Res_Fileversion=2.0.14.1
+#AutoIt3Wrapper_Res_Fileversion=2.0.14.2
 #AutoIt3Wrapper_Res_LegalCopyright=© 2018 <https://blog.mcdope.org/>
 #AutoIt3Wrapper_Res_Language=1031
 #AutoIt3Wrapper_Res_requestedExecutionLevel=requireAdministrator
@@ -61,12 +61,12 @@ Func __readLanguageStrings($sLanguageToUse,  $sVariant)
 		$wUnattendedFinishText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedFinishText", "")
 		$wInitialLaunchText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InitialLaunchText", "")
 		$wInfoText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InfoText", "")
-		If $sVariant == "Host" Then
+		If $sVariant == "host" Then
 			$wTextAreaOfUsage = IniRead($sLangFile, $sVariant & "_WindowTexts", "AreaOfUsage", "")
 			$wTextLicense = IniRead($sLangFile, $sVariant & "_WindowTexts", "License", "")
 			$wTextComponents = IniRead($sLangFile, $sVariant & "_WindowTexts", "Components", "")
 			$wTextTargetDir = IniRead($sLangFile, $sVariant & "_WindowTexts", "TargetDir", "")
-			$wUnattendedAuthorizeTitle = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedAuthorizeTitle", "")
+			$wtUnattendedAuthorizeTitle = IniRead($sLangFile, $sVariant & "_WindowTitles", "UnattendedAuthorizeTitle", "")
 			$wUnattendedAuthorizeText = IniRead($sLangFile, $sVariant & "_WindowTexts", "UnattendedAuthorizeText", "")
 		Else
 			$wInstallStartText = IniRead($sLangFile, $sVariant & "_WindowTexts", "InstallStartText", "")
@@ -262,6 +262,7 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 	; If someone is willing to pay for it to be integrated, contact me and we will figure something out.
 
 	If $isAccountAddSupported Then
+		MsgBox(0, "Debug1", "Waiting for [" & $wtUnattendedStep2Title & "] / [" & $wUnattendedStep2Text & "]")
 		WinWait($wtUnattendedStep2Title, $wUnattendedStep2Text)
 		WinActivate($wtUnattendedStep2Title)
 		Sleep($iDelay)
@@ -275,7 +276,9 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 			Sleep($iDelay)
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
 
+			MsgBox(0, "Debug2", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
 			If WinWait($wtUnattendedMainTitle, $wUnattendedFinishText, (($iDelay/1000)*2)) == 0 Then ; ... no success message after iDelay*2 - so we assume this device is unauthorized
+				MsgBox(0, "Debug3", "Waiting for [" & $wtUnattendedAuthorizeTitle & "] / [" & $wUnattendedAuthorizeText & "]")
 				WinWait($wtUnattendedAuthorizeTitle, $wUnattendedAuthorizeText)
 				WinActivate($wtUnattendedAuthorizeTitle)
 				Sleep($iDelay)
@@ -283,6 +286,7 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 				ControlClick($wtUnattendedAuthorizeTitle, "", "[CLASS:Button; INSTANCE:4]") ; OK
 				ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:8]") ; Abbrechen - Workaround because we can't finish the authorization
 			Else ; ... "add to contacts" was successful
+				MsgBox(0, "Debug4", "Waiting for [" & $wtUnattendedMainTitle & "]")
 				WinActivate($wtUnattendedMainTitle)
 				Sleep($iDelay)
 				WinWaitActive($wtUnattendedMainTitle)
@@ -291,20 +295,20 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 		Else
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:3]") ; Ich möchte jetzt kein TeamViewer Konto erstellen
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
+			ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:7]") ; Fertigstellen
 		EndIf
+	Else
+		MsgBox(0, "Debug5", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
+		WinWait($wtUnattendedMainTitle, $wUnattendedFinishText)
+		WinActivate($wtUnattendedMainTitle)
+		Sleep($iDelay)
+		MsgBox(0, "Debug6", "Waiting for [" & $wtUnattendedMainTitle & "] being active")
+		WinWaitActive($wtUnattendedMainTitle)
+		ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:3]") ; Fertigstellen
 	EndIf
 
-	MsgBox(0, "Debug", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
-	WinWait($wtUnattendedMainTitle, $wUnattendedFinishText)
-	WinActivate($wtUnattendedMainTitle)
 	Sleep($iDelay)
-	MsgBox(0, "Debug", "Waiting for [" & $wtUnattendedMainTitle & "] being active")
-	WinWaitActive($wtUnattendedMainTitle)
-	ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:3]") ; Fertigstellen
-	MsgBox(0, "Debug", "Button clicked")
-
-	Sleep($iDelay)
-	MsgBox(0, "Debug", "Waiting for [" & $wtUnattendedMainTitle & "]  to be closed")
+	MsgBox(0, "Debug7", "Waiting for [" & $wtUnattendedMainTitle & "]  to be closed")
 	WinWaitClose($wtUnattendedMainTitle)
 	TrayTip($sTrayTitle, "", 0, 1)
 EndFunc
