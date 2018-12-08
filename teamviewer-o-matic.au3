@@ -262,7 +262,7 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 	; If someone is willing to pay for it to be integrated, contact me and we will figure something out.
 
 	If $isAccountAddSupported Then
-		MsgBox(0, "Debug1", "Waiting for [" & $wtUnattendedStep2Title & "] / [" & $wUnattendedStep2Text & "]")
+		; MsgBox(0, "Debug1", "Waiting for [" & $wtUnattendedStep2Title & "] / [" & $wUnattendedStep2Text & "]")
 		WinWait($wtUnattendedStep2Title, $wUnattendedStep2Text)
 		WinActivate($wtUnattendedStep2Title)
 		Sleep($iDelay)
@@ -276,9 +276,9 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 			Sleep($iDelay)
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
 
-			MsgBox(0, "Debug2", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
+			; MsgBox(0, "Debug2", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
 			If WinWait($wtUnattendedMainTitle, $wUnattendedFinishText, (($iDelay/1000)*2)) == 0 Then ; ... no success message after iDelay*2 - so we assume this device is unauthorized
-				MsgBox(0, "Debug3", "Waiting for [" & $wtUnattendedAuthorizeTitle & "] / [" & $wUnattendedAuthorizeText & "]")
+				; MsgBox(0, "Debug3", "Waiting for [" & $wtUnattendedAuthorizeTitle & "] / [" & $wUnattendedAuthorizeText & "]")
 				WinWait($wtUnattendedAuthorizeTitle, $wUnattendedAuthorizeText)
 				WinActivate($wtUnattendedAuthorizeTitle)
 				Sleep($iDelay)
@@ -286,7 +286,7 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 				ControlClick($wtUnattendedAuthorizeTitle, "", "[CLASS:Button; INSTANCE:4]") ; OK
 				ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:8]") ; Abbrechen - Workaround because we can't finish the authorization
 			Else ; ... "add to contacts" was successful
-				MsgBox(0, "Debug4", "Waiting for [" & $wtUnattendedMainTitle & "]")
+				; MsgBox(0, "Debug4", "Waiting for [" & $wtUnattendedMainTitle & "]")
 				WinActivate($wtUnattendedMainTitle)
 				Sleep($iDelay)
 				WinWaitActive($wtUnattendedMainTitle)
@@ -298,17 +298,17 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 			ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:7]") ; Fertigstellen
 		EndIf
 	Else
-		MsgBox(0, "Debug5", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
+		; MsgBox(0, "Debug5", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
 		WinWait($wtUnattendedMainTitle, $wUnattendedFinishText)
 		WinActivate($wtUnattendedMainTitle)
 		Sleep($iDelay)
-		MsgBox(0, "Debug6", "Waiting for [" & $wtUnattendedMainTitle & "] being active")
+		; MsgBox(0, "Debug6", "Waiting for [" & $wtUnattendedMainTitle & "] being active")
 		WinWaitActive($wtUnattendedMainTitle)
 		ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:3]") ; Fertigstellen
 	EndIf
 
 	Sleep($iDelay)
-	MsgBox(0, "Debug7", "Waiting for [" & $wtUnattendedMainTitle & "]  to be closed")
+	; MsgBox(0, "Debug7", "Waiting for [" & $wtUnattendedMainTitle & "]  to be closed")
 	WinWaitClose($wtUnattendedMainTitle)
 	TrayTip($sTrayTitle, "", 0, 1)
 EndFunc
