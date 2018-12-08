@@ -267,7 +267,7 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 		Sleep($iDelay)
 		WinWaitActive($wtUnattendedStep2Title)
 
-		If $addToContacts Then
+		If $addToContacts == 1 Then
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:2]") ; Ich habe bereits ein TeamViewer Konto
 			ControlSend($wtUnattendedStep2Title, "", "[CLASS:Edit; INSTANCE:2]", $strUser, 1) ; User
 			Sleep($iDelay)
@@ -291,16 +291,20 @@ Func __configureUnattendedAccess($addToContacts = 0, $isAccountAddSupported = Fa
 		Else
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:3]") ; Ich möchte jetzt kein TeamViewer Konto erstellen
 			ControlClick($wtUnattendedStep2Title, "", "[CLASS:Button; INSTANCE:6]") ; Weiter
-
-			WinWait($wtUnattendedMainTitle, $wUnattendedFinishText)
-			WinActivate($wtUnattendedMainTitle)
-			Sleep($iDelay)
-			WinWaitActive($wtUnattendedMainTitle)
-			ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:7]") ; Fertigstellen
 		EndIf
 	EndIf
 
+	MsgBox(0, "Debug", "Waiting for [" & $wtUnattendedMainTitle & "] / [" & $wUnattendedFinishText & "]")
+	WinWait($wtUnattendedMainTitle, $wUnattendedFinishText)
+	WinActivate($wtUnattendedMainTitle)
 	Sleep($iDelay)
+	MsgBox(0, "Debug", "Waiting for [" & $wtUnattendedMainTitle & "] being active")
+	WinWaitActive($wtUnattendedMainTitle)
+	ControlClick($wtUnattendedMainTitle, "", "[CLASS:Button; INSTANCE:3]") ; Fertigstellen
+	MsgBox(0, "Debug", "Button clicked")
+
+	Sleep($iDelay)
+	MsgBox(0, "Debug", "Waiting for [" & $wtUnattendedMainTitle & "]  to be closed")
 	WinWaitClose($wtUnattendedMainTitle)
 	TrayTip($sTrayTitle, "", 0, 1)
 EndFunc
